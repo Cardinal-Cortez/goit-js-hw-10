@@ -1,3 +1,4 @@
+
 import './css/styles.css';
 import { debounce } from 'lodash';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
@@ -7,7 +8,6 @@ const DEBOUNCE_DELAY = 300;
 
 const input = document.querySelector('#search-box');
 const countryList = document.querySelector('.country-list');
-const countryInfo = document.querySelector('.country-info');
 
 input.addEventListener('input', debounce(handleInput, DEBOUNCE_DELAY));
 
@@ -27,17 +27,19 @@ function handleInput(event) {
 }
 
 function formListAndInfo(data) {
-  const inputCountry = data
-    .map(({ name, flags }) => {
-      return `<li><h1>${name.common}</h1></li><li><img src="${flags.svg}" alt="прапор" width="150px"></li>`;
-    })
-    .join('');
-  countryList.innerHTML = inputCountry;
-  const inputInfo = data
-    .map(({ capital, population, languages }) => {
-      const languagesAll = Object.values(languages).map(value => `<li>${value}</li>`).join('');
-      return `<p>Столиця: ${capital}</p><p>Населення: ${population}</p><h2>Мови:</h2><ul>${languagesAll}</ul> `;
-    })
-    .join('');
-  countryInfo.innerHTML = inputInfo;
+  countryList.innerHTML = data.map(({ name, flags, capital, population, languages }) => `
+    <li>
+      <h1>${name.common}</h1>
+      <img src="${flags.svg}" alt="прапор" width="150px">
+      <div>
+        <p>Столица: ${capital}</p>
+        <p>Население: ${population}</p>
+        <ul>
+          <h2>Мови:</h2>
+          ${Object.values(languages).map(value => `<li>${value}</li>`).join('')}
+        </ul>
+      </div>
+    </li>
+  `).join('');
 }
+

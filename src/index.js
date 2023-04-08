@@ -28,6 +28,7 @@ function handleInput(event) {
     })
     .catch(error => {
       if (error.message === "404") {
+        countryList.innerHTML = '';
         Notify.failure('Oops, there is no country with that name.');
       }
     });

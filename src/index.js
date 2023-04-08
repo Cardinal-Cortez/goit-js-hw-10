@@ -13,16 +13,23 @@ input.addEventListener('input', debounce(handleInput, DEBOUNCE_DELAY));
 
 function handleInput(event) {
   const searchCountry = event.target.value.trim();
+  if (!searchCountry) {
+    countryList.innerHTML = '';
+    return;
+  }
   fetchCountries(searchCountry)
     .then(data => {
       if (data.length >= 10) {
+        countryList.innerHTML = '';
         Notify.info('Too many matches found. Please enter a more specific name.');
         return;
       }
       formListAndInfo(data);
     })
-    .catch(() => {
-      Notify.failure('Oops, there is no country with that name.');
+    .catch(error => {
+      if (error.message === "404") {
+        Notify.failure('Oops, there is no country with that name.');
+      }
     });
 }
 
